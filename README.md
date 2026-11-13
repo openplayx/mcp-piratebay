@@ -1,189 +1,60 @@
-# thepiratebay-api
+# OpenPlayX Torrent Search
 
-[![codecov](https://codecov.io/github/9BitDaniel/thepiratebay-api/graph/badge.svg?token=ZEHPPXOGP6)](https://github.com/9BitDaniel/thepiratebay-api)
+A read-only HTTP API for searching an administrator-configured torrent
+index, built for the OpenPlayX app and its AI tools. It wraps the upstream
+[`thepiratebay_api`](docs/upstream/README.md) library, which is imported in
+full and kept unmodified; see [UPSTREAM.md](UPSTREAM.md).
 
-An unofficial Python API wrapper for The Pirate Bay.
+The service only searches. It does not run a download engine, create
+downloads or store media. In OpenPlayX, the app shows the search candidates.
+After the user picks one and asks for a download, the app resolves it here
+and hands the magnet to bittorrent-server's plan/add flow.
 
->Please [open an issue](https://github.com/9BitDaniel/thepiratebay-api/issues) if something's not working.
+Results are external index data. Titles, sizes and peer counts are what the
+source declares and are not verified. Source badges such as "trusted" are
+not safety checks.
 
-## Installation
+## API
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /healthz` | Liveness (never contacts the source) |
+| `GET /readyz` | Tokens configured, cache store writable |
+| `GET /v1/capabilities` | Operations for this token, sorts, limits, versions |
+| `GET /v1/categories` | Category keys (adult categories off by default) |
+| `POST /v1/search` | `{"query", "category", "sort", "page"}` returns one source page |
+| `GET /v1/browse?category=&sort=&page=` | Browse one specific category |
+| `GET /v1/top?category=` | The source's top list |
+| `GET /v1/recent?page=` | Newest items |
+| `GET /v1/search-results/{result_ref}` | Normalised detail of a listed item |
+| `POST /v1/search-results/{result_ref}/resolve` | Validated magnet for a chosen item (`resolve` scope) |
+| `GET /openapi.json`, `GET /docs` | Contract and browsable docs ([api/openapi.json](api/openapi.json)) |
+
+Every `/v1` call needs `Authorization: Bearer <token>`. More detail is in
+[docs/api.md](docs/api.md).
+
+## Development
 
 ```bash
-pip install thepiratebay-api
-```
-```bash
-uv add thepiratebay-api
-```
-
-Or directly from GitHub:
-
-```bash
-pip install git+https://github.com/9BitDaniel/thepiratebay-api.git
-```
-```bash
-uv add git+https://github.com/9BitDaniel/thepiratebay-api.git
+uv sync --all-groups --extra server
+scripts/check.sh                       # lint, all offline tests, OpenAPI contract
+uv run torrent-search-server --config deploy/config.local.json --secrets deploy/secrets.json
 ```
 
-## Quick Start
+`config.local.json` and `secrets.json` are git-ignored. Start from the
+`deploy/*.example.json` files. For a plain token, set
+`"token": "<at least 24 chars>"`; to store it hashed, use `"token_sha256"`.
 
-```python
-from thepiratebay_api import TorrentClient
+## Deployment
 
-with TorrentClient() as client:
-    results = client.search("ubuntu")
-
-    for torrent in results.torrents:
-        print(torrent.title, torrent.seeders)
-```
-
-## Usage
-
-### Search
-
-```python
-# Basic search
-results = client.search("ubuntu")
-
-# With category
-results = client.search("Tenet", category=TorrentClient.Category.Video.HD_MOVIES)
-
-# With pagination
-results = client.search("ubuntu", page=2)
-
-# With custom sorting
-results = client.search(
-    "ubuntu", 
-    sort_by=TorrentClient.SortBy.SEEDERS_DESC
-)
-
-print(f"Page {results.current_page} of {results.page_count}")
-```
-
-## Working with Results
-
-All results are [Pydantic](https://docs.pydantic.dev) models, so you can serialize them however you need:
-
-```python
-results = client.search("Bomber Mafia")
-
-# Convert to dict
-results.model_dump()
-
-# Convert to JSON string
-results.model_dump_json()
-
-# Individual torrent
-torrent = results.torrents[0]
-torrent.model_dump()
-torrent.model_dump_json()
-
-# Full torrent details
-details = client.detail(torrent.torrent_id)
-details.model_dump()
-details.model_dump_json()
-```
-
-
-### Categories
-You could use all the major categories found in The Pirate Bay along with some of the sub categories
-```python
-TorrentClient.Category.ALL
-
-TorrentClient.Category.Audio.MUSIC
-TorrentClient.Category.Audio.FLAC
-TorrentClient.Category.Audio.AUDIOBOOKS
-
-TorrentClient.Category.Video.MOVIES
-TorrentClient.Category.Video.TV_SHOWS
-TorrentClient.Category.Video.HD_MOVIES
-TorrentClient.Category.Video.HD_TV_SHOW
-TorrentClient.Category.Video.UHD_MOVIES
-
-TorrentClient.Category.Games.PC
-TorrentClient.Category.Apps.WIN
-TorrentClient.Category.Other.EBOOKS
-```
-
-### Torrent Details
-
-```python
-# Pass a torrent ID from search results
-details = client.detail(torrent.torrent_id)
-
-print(details.title)
-print(details.size)
-print(details.seeders)
-print(details.magnet_link)
-print(details.info_hash)
-print(details.num_files)
-print(details.uploader)
-print(details.is_vip)
-print(details.is_trusted)
-print(details.description)
-print(details.images)         # image URLs found in the description
-print(details.additional_info) # extra metadata that differ across torrents
-```
-
-### Browse & Discover
-
-```python
-# Browse a category (category has to be specified)
-results = client.browse(TorrentClient.Category.Video.HD_MOVIES)
-
-# Top torrents in a category (category has to be specified)
-results = client.top(TorrentClient.Category.Audio.MUSIC)
-
-# Recently uploaded torrents
-results = client.recent()
-results = client.recent(page=2)
-```
-
-### Mirror Sites
-
-If the default URL is blocked or unreachable:
-
-```python
-mirrors = client.mirrors()
-alive = mirrors.alive  # only working mirrors
-
-if alive:
-    client = TorrentClient(url=alive[0].url)
-```
-
-### Custom HTTP Options
-
-Any keyword argument is passed directly to `httpx.Client`:
-
-```python
-# Custom timeout
-client = TorrentClient(timeout=30)
-
-# Custom headers
-client = TorrentClient(headers={"User-Agent": "Mozilla/5.0"})
-
-# Through a proxy
-client = TorrentClient(proxy="socks5://localhost:1080")
-
-# Custom mirror as base URL
-client = TorrentClient(url="https://thepiratebay.bond")
-```
-
-## Requirements
-
-- Python 3.10+
-- httpx
-- beautifulsoup4
-- lxml
-- pydantic
-
-## Contributing
-
-Contributions are welcome
-
-## Support the Project ⭐
-
-If you found this API wrapper useful, please consider giving this repository a **Star**
+The image comes from the `Dockerfile` (pinned sources and `uv.lock`, non-root,
+read-only root filesystem). [deploy/compose.yaml](deploy/compose.yaml) runs it
+as the independent Compose project `openplayx-torrent-search`. The 211 test
+deployment uses `scripts/deploy-211.sh`, described in
+[docs/deploy-211.md](docs/deploy-211.md).
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+The upstream library is MIT, © 2026 Daniel ([LICENSE](LICENSE)). OpenPlayX
+additions are in `src/torrent_search_server/`, `tests/server/`, `api/`,
+`deploy/`, `scripts/` and `docs/`, apart from `docs/upstream/`.

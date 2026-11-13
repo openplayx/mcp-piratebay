@@ -218,3 +218,9 @@ __marimo__/
 .streamlit/secrets.toml
 
 scratch.py
+
+# OpenPlayX torrent-search service
+/data/
+/deploy/secrets.json
+/deploy/config.local.json
+/deploy/.env

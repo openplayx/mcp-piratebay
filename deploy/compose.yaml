@@ -1,0 +1,27 @@
+# Independent Compose project; data and secrets stay inside this project.
+#   TORRENT_SEARCH_IMAGE=openplayx/torrent-search:<tag> BIND=<ip> PORT=18790 \
+#     docker compose -p openplayx-torrent-search -f compose.yaml up -d
+name: openplayx-torrent-search
+services:
+  torrent-search:
+    image: ${TORRENT_SEARCH_IMAGE:?set TORRENT_SEARCH_IMAGE}
+    restart: unless-stopped
+    ports:
+      - "${BIND:-127.0.0.1}:${PORT:-18790}:8790"
+    volumes:
+      - ./config.json:/config/config.json:ro
+      - ./secrets.json:/run/secrets/torrent-search.json:ro
+      - data:/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    cpus: 1.0
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+volumes:
+  data: {}
