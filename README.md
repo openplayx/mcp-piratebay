@@ -33,6 +33,21 @@ not safety checks.
 Every `/v1` call needs `Authorization: Bearer <token>`. More detail is in
 [docs/api.md](docs/api.md).
 
+## MCP
+
+`POST /mcp` exposes `search`, `get_details`, `resolve_candidate` and
+`list_categories`; `tools/list` only shows the tools the token's scopes allow
+(`resolve_candidate` needs `resolve`). Searching never downloads.
+
+Streamable HTTP subset: single JSON-RPC 2.0 messages over `POST`, answered
+with `application/json` (no SSE, no server-initiated messages); stateless (no
+`Mcp-Session-Id`); `initialize`, `ping`, `tools/list`, `tools/call` and
+notifications; protocol versions 2025-11-25, 2025-06-18 and 2025-03-26. The
+same bearer token as the HTTP API is required on every request; requests with
+a foreign `Origin` are refused. Business failures are tool results with
+`isError: true` and the HTTP API's error codes. The MCP layer calls the same
+service code as the HTTP handlers (no second state, no loopback request).
+
 ## Development
 
 ```bash

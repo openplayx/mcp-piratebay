@@ -18,6 +18,7 @@ from .adapter import TpbAdapter
 from .auth import Authenticator
 from .config import Config, Secrets, resolve_proxy
 from .errors import ApiError
+from .mcp import router as mcp_router
 from .netguard import Resolver, system_resolver
 from .routes import router
 from .service import SearchService
@@ -69,6 +70,7 @@ def create_app(
         openapi_url="/openapi.json" if public else None,
     )
     app.include_router(router)
+    app.include_router(mcp_router)
 
     @app.middleware("http")
     async def request_context(request: Request, call_next):
