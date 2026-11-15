@@ -6,3 +6,7 @@
 /deploy/.env
 *.sqlite3
 *.sqlite3-*
+
+# Bytecode left by the previous Python implementation.
+__pycache__/
+*.py[cod]

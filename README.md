@@ -118,11 +118,20 @@ In OpenPlayX, add it under **AI → 外部能力** with the service root URL and
 
 ```bash
 scripts/check.sh                       # gofmt, go vet, all offline tests, OpenAPI contract
-go run ./cmd/mcp-piratebay --config deploy/config.local.json --secrets deploy/secrets.json
+go run ./cmd/mcp-piratebay --config deploy/config.json --secrets deploy/secrets.json
 ```
 
-`config.local.json` and `secrets.json` are git-ignored. Following upstream
-parser changes: [UPSTREAM.md](UPSTREAM.md).
+For a local run, set `server.host` to `127.0.0.1` and `cache.path` to a
+writable local path in `deploy/config.json`. Both configuration files are
+git-ignored. Following upstream parser changes: [UPSTREAM.md](UPSTREAM.md).
+
+## Migrating from the Python service
+
+Rebuild the image and recreate the container with the existing Compose file,
+configuration, tokens and data volume. The Go binary replaces the Python
+runtime; the HTTP API, MCP tools, ports and SQLite schema stay compatible.
+Existing result references remain valid until they expire. Cached source
+pages use a new parser revision and are fetched again on their next request.
 
 ## Contributing
 

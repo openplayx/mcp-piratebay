@@ -95,10 +95,17 @@
 
 ```bash
 scripts/check.sh                       # gofmt、go vet、全部离线测试、OpenAPI 契约检查
-go run ./cmd/mcp-piratebay --config deploy/config.local.json --secrets deploy/secrets.json
+go run ./cmd/mcp-piratebay --config deploy/config.json --secrets deploy/secrets.json
 ```
 
-`config.local.json` 和 `secrets.json` 已被 git 忽略。跟进上游解析器改动的步骤见 [UPSTREAM.md](UPSTREAM.md)（英文）。
+本地运行时，在 `deploy/config.json` 中把 `server.host` 设为 `127.0.0.1`，
+把 `cache.path` 设为本地可写路径。两个配置文件已被 git 忽略。跟进上游解析器改动的步骤见 [UPSTREAM.md](UPSTREAM.md)（英文）。
+
+## 从 Python 服务迁移
+
+重新构建镜像并重建容器，沿用现有 Compose 文件、配置、token 和数据卷。
+Go 程序替代 Python 运行时；HTTP API、MCP 工具、端口和 SQLite 数据结构保持兼容。
+已有结果引用在到期前仍然有效。来源页面缓存使用新的解析器版本，下一次请求时会重新获取。
 
 ## 参与贡献
 
