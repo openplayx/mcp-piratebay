@@ -37,6 +37,7 @@ calls it.
 | `uv.lock` | Re-locked for the added dependencies | Reproducible builds |
 | `.github/workflows/tests.yml` | Removed the Codecov upload step (the original author's token); runs `scripts/check.sh` | No upstream credentials or publishing |
 | `.gitignore` | Appended service data/secret paths | |
+| `LICENSE` | Added a copyright line for the OpenPlayX contributors; license text unchanged | The OpenPlayX additions use the same MIT license |
 
 No parser patches. Two upstream behaviours are handled in
 `src/torrent_search_server/adapter.py` and not patched in the library:
