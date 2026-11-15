@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
-# Offline checks used locally and by CI: lint the service package, run the
-# upstream and service test suites, verify the committed OpenAPI contract.
+# Offline checks used locally and by CI: formatting, vet and tests. The
+# tests use self-written fixtures and a fake source; they never touch the
+# network.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-uv sync --frozen --all-groups --extra server
-uv run ruff check src/torrent_search_server tests/server
-uv run pytest -q
-uv run python -m torrent_search_server --export-openapi /tmp/torrent-search-openapi.json
-diff -u api/openapi.json /tmp/torrent-search-openapi.json
+unformatted="$(gofmt -l .)"
+if [ -n "$unformatted" ]; then
+  echo "gofmt needed:" >&2
+  echo "$unformatted" >&2
+  exit 1
+fi
+go vet ./...
+go test -race -count=1 ./...
 echo "all checks passed"

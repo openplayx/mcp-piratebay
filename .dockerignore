@@ -1,10 +1,5 @@
 .git
-.venv
 data
-tests
-**/__pycache__
-.pytest_cache
-.ruff_cache
+dist
 deploy/secrets.json
 deploy/config.json
-deploy/config.local.json

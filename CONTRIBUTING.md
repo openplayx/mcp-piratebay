@@ -18,7 +18,7 @@ Thanks for your interest. Bug reports, fixes and small improvements are welcome.
 3. Add or update tests, and run the checks before pushing:
 
    ```bash
-   scripts/check.sh              # ruff, offline tests, OpenAPI contract
+   scripts/check.sh              # gofmt, go vet, offline tests, OpenAPI contract
    ```
 
 4. Update the README in both languages (`README.md` and `README.zh-CN.md`)
@@ -26,7 +26,7 @@ Thanks for your interest. Bug reports, fixes and small improvements are welcome.
 5. Tool names, arguments and error codes are a contract with MCP clients:
    change them only with a good reason and say so in the pull request.
 
-`src/thepiratebay_api/` is the unmodified upstream library: fix parser bugs upstream, or work around them in `src/torrent_search_server/adapter.py` (see [UPSTREAM.md](UPSTREAM.md)).
+The parser in `internal/tpb/` is a port of the upstream library and must keep matching its golden outputs; see [UPSTREAM.md](UPSTREAM.md) before changing it, and bump `ParserRevision` when parsing output changes.
 
 By contributing you agree that your contribution is licensed under this
 repository's license.

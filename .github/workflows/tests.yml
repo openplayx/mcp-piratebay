@@ -1,8 +1,6 @@
 name: Tests
 
-# OpenPlayX: the upstream workflow uploaded coverage to the original author's
-# Codecov project; that step is removed. Only offline tests run here; no
-# publishing, no credentials. Upstream version: see UPSTREAM.md.
+# Offline checks only; no publishing, no credentials.
 on:
   push:
     branches: [ main ]
@@ -15,20 +13,9 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v5
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
       with:
-        enable-cache: true
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-
-    - name: Checks
-      run: scripts/check.sh
+        go-version-file: go.mod
+    - run: scripts/check.sh

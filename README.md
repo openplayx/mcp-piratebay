@@ -6,9 +6,10 @@ English | [简体中文](README.zh-CN.md)
 
 Torrent search for [OpenPlayX](https://github.com/openplayx/openplayx) as an
 MCP server and HTTP API (formerly *torrent-search*): a read-only service for
-searching an administrator-configured torrent index, built for the OpenPlayX app and its AI tools. It wraps the upstream
-[`thepiratebay_api`](docs/upstream/README.md) library, which is imported in
-full and kept unmodified; see [UPSTREAM.md](UPSTREAM.md).
+searching an administrator-configured torrent index, built for the OpenPlayX app and its AI tools. It is a single Go
+binary; its page parser is a port of the upstream
+[`thepiratebay-api`](https://github.com/9BitDaniel/thepiratebay-api) library,
+see [UPSTREAM.md](UPSTREAM.md).
 
 The service only searches. It does not run a download engine, create
 downloads or store media. In OpenPlayX, the app shows the search candidates.
@@ -55,8 +56,7 @@ service code as the HTTP handlers (no second state, no loopback request).
 
 ## Quick start
 
-Requirements: Docker, or Python 3.12 with [uv](https://docs.astral.sh/uv/)
-for local development.
+Requirements: Docker, or Go 1.26 for local development.
 
 1. Create a token and the configuration:
 
@@ -64,7 +64,7 @@ for local development.
    cd deploy
    cp config.example.json config.json      # set source.base_url to the index you want
    cp secrets.example.json secrets.json
-   TOKEN=$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')
+   TOKEN=$(openssl rand -hex 32)
    printf '%s' "$TOKEN" | shasum -a 256    # put the digest into secrets.json → token_sha256
    ```
 
@@ -78,8 +78,8 @@ for local development.
    ```
 
    The service listens on `127.0.0.1:18790` (`BIND` and `PORT` change it).
-   The image is built from pinned sources and `uv.lock`, runs as non-root
-   with a read-only root filesystem, and keeps its cache in a named volume.
+   The image holds one static binary, runs as non-root with a read-only
+   root filesystem, and keeps its cache in a named volume.
 
 3. Check it:
 
@@ -117,13 +117,12 @@ In OpenPlayX, add it under **AI → 外部能力** with the service root URL and
 ## Development
 
 ```bash
-uv sync --all-groups --extra server
-scripts/check.sh                       # lint, all offline tests, OpenAPI contract
-uv run torrent-search-server --config deploy/config.local.json --secrets deploy/secrets.json
+scripts/check.sh                       # gofmt, go vet, all offline tests, OpenAPI contract
+go run ./cmd/mcp-piratebay --config deploy/config.local.json --secrets deploy/secrets.json
 ```
 
-`config.local.json` and `secrets.json` are git-ignored. Upgrading the upstream
-library: [UPSTREAM.md](UPSTREAM.md).
+`config.local.json` and `secrets.json` are git-ignored. Following upstream
+parser changes: [UPSTREAM.md](UPSTREAM.md).
 
 ## Contributing
 
@@ -140,7 +139,6 @@ to you. The project is not affiliated with The Pirate Bay or any index.
 
 ## License
 
-[MIT](LICENSE). The upstream library is © 2026 Daniel; the OpenPlayX additions
-(`src/torrent_search_server/`, `tests/server/`, `api/`, `deploy/`, `scripts/`
-and `docs/` apart from `docs/upstream/`) are © 2026 OpenPlayX contributors,
+[MIT](LICENSE). The parser in `internal/tpb/` is ported from the upstream
+library, © 2026 Daniel; everything else is © 2026 OpenPlayX contributors,
 under the same license.

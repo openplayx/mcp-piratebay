@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-[OpenPlayX](https://github.com/openplayx/openplayx) 的种子搜索服务，提供 MCP 服务和 HTTP API（原名 *torrent-search*）。它是只读服务，用来搜索管理员配置的种子索引站，为 OpenPlayX App 及其 AI 工具而做。它封装了上游的 [`thepiratebay_api`](docs/upstream/README.md) 库，上游代码完整导入、未做修改，见 [UPSTREAM.md](UPSTREAM.md)（英文）。
+[OpenPlayX](https://github.com/openplayx/openplayx) 的种子搜索服务，提供 MCP 服务和 HTTP API（原名 *torrent-search*）。它是只读服务，用来搜索管理员配置的种子索引站，为 OpenPlayX App 及其 AI 工具而做。服务是一个 Go 程序，页面解析器移植自上游的 [`thepiratebay-api`](https://github.com/9BitDaniel/thepiratebay-api) 库，见 [UPSTREAM.md](UPSTREAM.md)（英文）。
 
 本服务只负责搜索，不运行下载引擎，不创建下载，也不存储媒体。在 OpenPlayX 中，App 展示搜索候选；用户选中一个并要求下载后，App 在这里解析出磁力链接，再交给 [mcp-qbittorrent](https://github.com/openplayx/mcp-qbittorrent) 的计划/添加流程。
 
@@ -36,7 +36,7 @@
 
 ## 快速开始
 
-依赖：Docker；本地开发需要 Python 3.12 和 [uv](https://docs.astral.sh/uv/)。
+依赖：Docker；本地开发需要 Go 1.26。
 
 1. 生成 token 和配置：
 
@@ -44,7 +44,7 @@
    cd deploy
    cp config.example.json config.json      # 把 source.base_url 设为你要用的索引站
    cp secrets.example.json secrets.json
-   TOKEN=$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')
+   TOKEN=$(openssl rand -hex 32)
    printf '%s' "$TOKEN" | shasum -a 256    # 把摘要填进 secrets.json 的 token_sha256
    ```
 
@@ -57,7 +57,7 @@
    TORRENT_SEARCH_IMAGE=openplayx/torrent-search:local docker compose up -d
    ```
 
-   服务监听 `127.0.0.1:18790`（用 `BIND` 和 `PORT` 修改）。镜像基于锁定版本的源码和 `uv.lock` 构建，以非 root 用户运行，根文件系统只读，缓存保存在命名卷中。
+   服务监听 `127.0.0.1:18790`（用 `BIND` 和 `PORT` 修改）。镜像里只有一个静态二进制，以非 root 用户运行，根文件系统只读，缓存保存在命名卷中。
 
 3. 检查：
 
@@ -94,12 +94,11 @@
 ## 开发
 
 ```bash
-uv sync --all-groups --extra server
-scripts/check.sh                       # lint、全部离线测试、OpenAPI 契约检查
-uv run torrent-search-server --config deploy/config.local.json --secrets deploy/secrets.json
+scripts/check.sh                       # gofmt、go vet、全部离线测试、OpenAPI 契约检查
+go run ./cmd/mcp-piratebay --config deploy/config.local.json --secrets deploy/secrets.json
 ```
 
-`config.local.json` 和 `secrets.json` 已被 git 忽略。升级上游库的步骤见 [UPSTREAM.md](UPSTREAM.md)（英文）。
+`config.local.json` 和 `secrets.json` 已被 git 忽略。跟进上游解析器改动的步骤见 [UPSTREAM.md](UPSTREAM.md)（英文）。
 
 ## 参与贡献
 
@@ -111,4 +110,4 @@ uv run torrent-search-server --config deploy/config.local.json --secrets deploy/
 
 ## 许可证
 
-[MIT](LICENSE)。上游库版权归 © 2026 Daniel；OpenPlayX 新增的部分（`src/torrent_search_server/`、`tests/server/`、`api/`、`deploy/`、`scripts/`，以及 `docs/` 中除 `docs/upstream/` 以外的内容）版权归 © 2026 OpenPlayX contributors，采用同一许可证。
+[MIT](LICENSE)。`internal/tpb/` 中的解析器移植自上游库，版权归 © 2026 Daniel；其余部分版权归 © 2026 OpenPlayX contributors，采用同一许可证。
