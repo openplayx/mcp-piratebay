@@ -1,10 +1,12 @@
 # mcp-piratebay
 
+English | [简体中文](README.zh-CN.md)
+
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Torrent search for [OpenPlayX](https://github.com/openplayx/openplayx) as an
-MCP server and HTTP API (formerly *torrent-search*). A read-only service for searching an administrator-configured torrent
-index, built for the OpenPlayX app and its AI tools. It wraps the upstream
+MCP server and HTTP API (formerly *torrent-search*): a read-only service for
+searching an administrator-configured torrent index, built for the OpenPlayX app and its AI tools. It wraps the upstream
 [`thepiratebay_api`](docs/upstream/README.md) library, which is imported in
 full and kept unmodified; see [UPSTREAM.md](UPSTREAM.md).
 
