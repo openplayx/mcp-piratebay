@@ -120,9 +120,7 @@ scripts/check.sh                       # lint, all offline tests, OpenAPI contra
 uv run torrent-search-server --config deploy/config.local.json --secrets deploy/secrets.json
 ```
 
-`config.local.json` and `secrets.json` are git-ignored. `scripts/deploy-211.sh`
-is the maintainers' helper for building and running a committed revision on a
-remote Docker host over SSH (`DEPLOY_HOST`, `BIND`). Upgrading the upstream
+`config.local.json` and `secrets.json` are git-ignored. Upgrading the upstream
 library: [UPSTREAM.md](UPSTREAM.md).
 
 ## Contributing
