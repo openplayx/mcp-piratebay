@@ -20,8 +20,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/openplayx/mcp-piratebay/internal/apierr"
-	"github.com/openplayx/mcp-piratebay/internal/config"
+	"github.com/openplayx/mcp-piratebay/src/internal/apierr"
+	"github.com/openplayx/mcp-piratebay/src/internal/config"
 )
 
 type Resolver func(ctx context.Context, host string, port int) ([]string, error)

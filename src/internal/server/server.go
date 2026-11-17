@@ -25,12 +25,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/openplayx/mcp-piratebay/api"
-	"github.com/openplayx/mcp-piratebay/internal/apierr"
-	"github.com/openplayx/mcp-piratebay/internal/auth"
-	"github.com/openplayx/mcp-piratebay/internal/categories"
-	"github.com/openplayx/mcp-piratebay/internal/ojson"
-	"github.com/openplayx/mcp-piratebay/internal/service"
+	"github.com/openplayx/mcp-piratebay/src/api"
+	"github.com/openplayx/mcp-piratebay/src/internal/apierr"
+	"github.com/openplayx/mcp-piratebay/src/internal/auth"
+	"github.com/openplayx/mcp-piratebay/src/internal/categories"
+	"github.com/openplayx/mcp-piratebay/src/internal/ojson"
+	"github.com/openplayx/mcp-piratebay/src/internal/service"
 )
 
 // Upstream is the project the source parser was ported from (UPSTREAM.md).

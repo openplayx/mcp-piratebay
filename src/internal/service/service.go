@@ -19,13 +19,13 @@ import (
 
 	"golang.org/x/text/cases"
 
-	"github.com/openplayx/mcp-piratebay/internal/apierr"
-	"github.com/openplayx/mcp-piratebay/internal/auth"
-	"github.com/openplayx/mcp-piratebay/internal/categories"
-	"github.com/openplayx/mcp-piratebay/internal/config"
-	"github.com/openplayx/mcp-piratebay/internal/ojson"
-	"github.com/openplayx/mcp-piratebay/internal/source"
-	"github.com/openplayx/mcp-piratebay/internal/store"
+	"github.com/openplayx/mcp-piratebay/src/internal/apierr"
+	"github.com/openplayx/mcp-piratebay/src/internal/auth"
+	"github.com/openplayx/mcp-piratebay/src/internal/categories"
+	"github.com/openplayx/mcp-piratebay/src/internal/config"
+	"github.com/openplayx/mcp-piratebay/src/internal/ojson"
+	"github.com/openplayx/mcp-piratebay/src/internal/source"
+	"github.com/openplayx/mcp-piratebay/src/internal/store"
 )
 
 // ParserRevision is part of every cache key. Bump it whenever parsing or

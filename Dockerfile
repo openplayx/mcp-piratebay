@@ -5,11 +5,9 @@ FROM golang:1.26-bookworm AS build
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
-COPY api ./api
-COPY cmd ./cmd
-COPY internal ./internal
+COPY src ./src
 ARG VERSION=dev
-RUN CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o /out/mcp-piratebay ./cmd/mcp-piratebay
+RUN CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o /out/mcp-piratebay ./src/cmd/mcp-piratebay
 
 FROM debian:bookworm-slim
 RUN apt-get update \

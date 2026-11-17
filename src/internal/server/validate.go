@@ -12,7 +12,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/openplayx/mcp-piratebay/internal/categories"
+	"github.com/openplayx/mcp-piratebay/src/internal/categories"
 )
 
 // fields validates a JSON object strictly, like the earlier pydantic

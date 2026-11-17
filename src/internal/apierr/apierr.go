@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/openplayx/mcp-piratebay/internal/ojson"
+	"github.com/openplayx/mcp-piratebay/src/internal/ojson"
 )
 
 type Error struct {

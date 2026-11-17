@@ -15,7 +15,7 @@ import (
 	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/openplayx/mcp-piratebay/internal/normalize"
+	"github.com/openplayx/mcp-piratebay/src/internal/normalize"
 	"golang.org/x/net/html"
 )
 

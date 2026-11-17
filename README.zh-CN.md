@@ -24,7 +24,7 @@
 | `GET /v1/recent?page=` | 最新条目 |
 | `GET /v1/search-results/{result_ref}` | 列表中某个条目的规范化详情 |
 | `POST /v1/search-results/{result_ref}/resolve` | 为选中的条目返回经过校验的磁力链接（需要 `resolve` 权限） |
-| `GET /openapi.json`、`GET /docs` | 接口契约和可浏览的文档（[api/openapi.json](api/openapi.json)） |
+| `GET /openapi.json`、`GET /docs` | 接口契约和可浏览的文档（[src/api/openapi.json](src/api/openapi.json)） |
 
 所有 `/v1` 请求都需要 `Authorization: Bearer <token>`。更多细节见 [docs/api.md](docs/api.md)（英文）。
 
@@ -95,7 +95,7 @@
 
 ```bash
 scripts/check.sh                       # gofmt、go vet、全部离线测试、OpenAPI 契约检查
-go run ./cmd/mcp-piratebay --config deploy/config.json --secrets deploy/secrets.json
+go run ./src/cmd/mcp-piratebay --config deploy/config.json --secrets deploy/secrets.json
 ```
 
 本地运行时，在 `deploy/config.json` 中把 `server.host` 设为 `127.0.0.1`，
@@ -117,4 +117,4 @@ Go 程序替代 Python 运行时；HTTP API、MCP 工具、端口和 SQLite 数�
 
 ## 许可证
 
-[MIT](LICENSE)。`internal/tpb/` 中的解析器移植自上游库，版权归 © 2026 Daniel；其余部分版权归 © 2026 OpenPlayX contributors，采用同一许可证。
+[MIT](LICENSE)。`src/internal/tpb/` 中的解析器移植自上游库，版权归 © 2026 Daniel；其余部分版权归 © 2026 OpenPlayX contributors，采用同一许可证。

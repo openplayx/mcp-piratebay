@@ -7,7 +7,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/openplayx/mcp-piratebay/internal/apierr"
+	"github.com/openplayx/mcp-piratebay/src/internal/apierr"
 )
 
 type Category struct {

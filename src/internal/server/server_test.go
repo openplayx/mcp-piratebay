@@ -15,13 +15,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/openplayx/mcp-piratebay/api"
-	"github.com/openplayx/mcp-piratebay/internal/auth"
-	"github.com/openplayx/mcp-piratebay/internal/config"
-	"github.com/openplayx/mcp-piratebay/internal/netguard"
-	"github.com/openplayx/mcp-piratebay/internal/service"
-	"github.com/openplayx/mcp-piratebay/internal/source"
-	"github.com/openplayx/mcp-piratebay/internal/store"
+	"github.com/openplayx/mcp-piratebay/src/api"
+	"github.com/openplayx/mcp-piratebay/src/internal/auth"
+	"github.com/openplayx/mcp-piratebay/src/internal/config"
+	"github.com/openplayx/mcp-piratebay/src/internal/netguard"
+	"github.com/openplayx/mcp-piratebay/src/internal/service"
+	"github.com/openplayx/mcp-piratebay/src/internal/source"
+	"github.com/openplayx/mcp-piratebay/src/internal/store"
 )
 
 const (

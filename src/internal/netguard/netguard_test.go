@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/openplayx/mcp-piratebay/internal/config"
+	"github.com/openplayx/mcp-piratebay/src/internal/config"
 )
 
 func src(t *testing.T, extra string) config.Source {

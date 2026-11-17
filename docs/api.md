@@ -1,6 +1,6 @@
 # API notes for OpenPlayX integration
 
-The machine-readable contract is `api/openapi.json`, which a test keeps in sync
+The machine-readable contract is `src/api/openapi.json`, which a test keeps in sync
 with the code. This page covers the behaviour the schema cannot express.
 
 ## Authentication and scopes

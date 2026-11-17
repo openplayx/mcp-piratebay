@@ -8,11 +8,11 @@ import (
 )
 
 func TestExamplesAreValid(t *testing.T) {
-	data, _ := os.ReadFile("../../deploy/config.example.json")
+	data, _ := os.ReadFile("../../../deploy/config.example.json")
 	if _, err := Parse(data); err != nil {
 		t.Fatal(err)
 	}
-	data, _ = os.ReadFile("../../deploy/secrets.example.json")
+	data, _ = os.ReadFile("../../../deploy/secrets.example.json")
 	if _, err := ParseSecrets(data); err != nil {
 		t.Fatal(err)
 	}

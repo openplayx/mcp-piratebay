@@ -34,7 +34,7 @@ not safety checks.
 | `GET /v1/recent?page=` | Newest items |
 | `GET /v1/search-results/{result_ref}` | Normalised detail of a listed item |
 | `POST /v1/search-results/{result_ref}/resolve` | Validated magnet for a chosen item (`resolve` scope) |
-| `GET /openapi.json`, `GET /docs` | Contract and browsable docs ([api/openapi.json](api/openapi.json)) |
+| `GET /openapi.json`, `GET /docs` | Contract and browsable docs ([src/api/openapi.json](src/api/openapi.json)) |
 
 Every `/v1` call needs `Authorization: Bearer <token>`. More detail is in
 [docs/api.md](docs/api.md).
@@ -118,7 +118,7 @@ In OpenPlayX, add it under **AI → 外部能力** with the service root URL and
 
 ```bash
 scripts/check.sh                       # gofmt, go vet, all offline tests, OpenAPI contract
-go run ./cmd/mcp-piratebay --config deploy/config.json --secrets deploy/secrets.json
+go run ./src/cmd/mcp-piratebay --config deploy/config.json --secrets deploy/secrets.json
 ```
 
 For a local run, set `server.host` to `127.0.0.1` and `cache.path` to a
@@ -148,6 +148,6 @@ to you. The project is not affiliated with The Pirate Bay or any index.
 
 ## License
 
-[MIT](LICENSE). The parser in `internal/tpb/` is ported from the upstream
+[MIT](LICENSE). The parser in `src/internal/tpb/` is ported from the upstream
 library, © 2026 Daniel; everything else is © 2026 OpenPlayX contributors,
 under the same license.

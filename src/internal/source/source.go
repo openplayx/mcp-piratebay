@@ -20,11 +20,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/openplayx/mcp-piratebay/internal/apierr"
-	"github.com/openplayx/mcp-piratebay/internal/config"
-	"github.com/openplayx/mcp-piratebay/internal/netguard"
-	"github.com/openplayx/mcp-piratebay/internal/normalize"
-	"github.com/openplayx/mcp-piratebay/internal/tpb"
+	"github.com/openplayx/mcp-piratebay/src/internal/apierr"
+	"github.com/openplayx/mcp-piratebay/src/internal/config"
+	"github.com/openplayx/mcp-piratebay/src/internal/netguard"
+	"github.com/openplayx/mcp-piratebay/src/internal/normalize"
+	"github.com/openplayx/mcp-piratebay/src/internal/tpb"
 )
 
 // Item is one normalised list entry (the cached form).
